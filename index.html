@@ -519,8 +519,8 @@
                         timestamp: new Date()
                     };
                     
-                    // 显示结果弹窗
-                    showAnswerResult(question, optionIndex, isCorrect);
+                    // 移除弹窗显示，直接重新渲染题目
+                    // showAnswerResult(question, optionIndex, isCorrect);
                     
                     // 重新渲染该题目
                     renderQuestions();
@@ -612,7 +612,6 @@
             }
         }
         
-        /* 修改loadData函数，加载本地存储的翻译 */
         async function loadData() {
             try {
                 // 加载题目数据
@@ -623,8 +622,14 @@
                 const jsonMatch = text.match(/\{[\s\S]*\}/);
                 if (jsonMatch) {
                     const data = JSON.parse(jsonMatch[0]);
-                    if (data.data && data.data.questionData && data.data.questionData[0] && data.data.questionData[0].questions) {
-                        allQuestions = data.data.questionData[0].questions;
+                    if (data.data && data.data.questionData) {
+                        // 合并所有题型的题目
+                        allQuestions = [];
+                        data.data.questionData.forEach(questionGroup => {
+                            if (questionGroup.questions) {
+                                allQuestions = allQuestions.concat(questionGroup.questions);
+                            }
+                        });
                     }
                 }
         
