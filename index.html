@@ -630,6 +630,11 @@
                                 allQuestions = allQuestions.concat(questionGroup.questions);
                             }
                         });
+                        
+                        // 过滤掉第120-160题
+                        allQuestions = allQuestions.filter(question => {
+                            return !(question.idx >= 121 && question.idx <= 160);
+                        });
                     }
                 }
         
