@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英语测试题库</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .stats {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+
+        .controls {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            border-color: #667eea;
+        }
+
+        .anchor-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .anchor-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .anchor-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .filter-select:focus {
+            border-color: #667eea;
+        }
+
+        .translation-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #667eea;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(26px);
+        }
+
+        .questions-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 5px solid #667eea;
+        }
+
+        .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .question-card.highlight {
+            border-left-color: #ff6b6b;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .question-type {
+            background: #f8f9fa;
+            color: #6c757d;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .question-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
+        .translation {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+            display: none;
+        }
+
+        .translation.show {
+            display: block;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .option.correct {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .option.incorrect {
+            background: linear-gradient(135deg, #dc3545, #fd7e14);
+            color: white;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .option.correct .option-label {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .option.incorrect .option-label {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .option-content {
+            flex: 1;
+        }
+
+        .option-translation {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .option-translation.show {
+            display: block;
+        }
+
+        .option.correct .option-translation.show,
+        .option.incorrect .option-translation.show {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .analysis {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .analysis h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .analysis-content {
+            line-height: 1.6;
+        }
+
+        .analysis-translation {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+            display: none;
+        }
+
+        .analysis-translation.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .question-card {
+                padding: 20px;
+            }
+
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .anchor-nav {
+                justify-content: center;
+            }
+
+            .translation-toggle {
+                margin-left: 0;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>英语测试题库</h1>
+            <div class="stats" id="stats">
+                <span id="totalQuestions">总题数: 0</span> |
+                <span id="currentDisplay">当前显示: 0</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-container">
+                <input type="text" class="search-box" id="searchBox" placeholder="搜索题目内容...">
+                <div class="anchor-nav">
+                    <button class="anchor-btn" onclick="scrollToQuestion(1)">1~50题</button>
+                    <button class="anchor-btn" onclick="scrollToQuestion(51)">51~100题</button>
+                    <button class="anchor-btn" onclick="scrollToQuestion(101)">101~150题</button>
+                    <button class="anchor-btn" onclick="scrollToQuestion(151)">151~200题</button>
+                    <button class="anchor-btn" onclick="scrollToQuestion(201)">201~250题</button>
+                    <button class="anchor-btn" onclick="scrollToQuestion(251)">251~300题</button>
+                </div>
+            </div>
+            
+            <div class="filter-container">
+                <div class="filter-group">
+                    <label for="typeFilter">题目类型:</label>
+                    <select class="filter-select" id="typeFilter">
+                        <option value="all">全部</option>
+                        <option value="0">选择题</option>
+                    </select>
+                </div>
+                
+                <div class="translation-toggle">
+                    <label>显示中文翻译:</label>
+                    <div class="toggle-switch" id="translationToggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <!-- 新增答题模式开关 -->
+                <div class="translation-toggle">
+                    <label>答题模式:</label>
+                    <div class="toggle-switch" id="examModeToggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="questions-container" id="questionsContainer">
+            <!-- 题目将在这里动态生成 -->
+        </div>
+    </div>
+
+    <script>
+        let allQuestions = [];
+        let filteredQuestions = [];
+        let translations = {};
+        let showTranslations = false;
+        let examMode = false; // 新增答题模式状态
+        let userAnswers = {}; // 存储用户答案
+        
+        function createQuestionCard(question) {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `question-${question.idx}`;
+        
+            const translation = translations[(question.idx - 1).toString()] || {};
+            const hasTranslation = Object.keys(translation).length > 0;
+            const userAnswer = userAnswers[question.idx];
+            const hasAnswered = userAnswer !== undefined;
+        
+            card.innerHTML = `
+                <div class="question-header">
+                    <div class="question-number">第 ${question.idx} 题</div>
+                    <div class="question-type">${getQuestionType(question.type)}</div>
+                    ${hasAnswered ? `<div class="answer-status ${userAnswer.isCorrect ? 'correct' : 'incorrect'}">
+                        ${userAnswer.isCorrect ? '✓ 正确' : '✗ 错误'}
+                    </div>` : ''}
+                </div>
+                
+                <div class="question-title">
+                    ${question.title}
+                    ${!examMode ? `<button class="ai-translate-btn" onclick="translateTitle(${question.idx - 1}, '${question.title.replace(/'/g, "\\'")}')">AI翻译</button>` : ''}
+                </div>
+                ${translation.title_CN ? `<div class="translation ${showTranslations ? 'show' : ''}">${translation.title_CN}</div>` : ''}
+                
+                <div class="options">
+                    ${question.answerOptions.map((option, optionIndex) => {
+                        const isCorrect = question.answer.includes(optionIndex.toString());
+                        let optionClass = '';
+                        
+                        if (examMode) {
+                            // 答题模式下的逻辑处理
+                            const hasAnswered = userAnswers[question.idx] !== undefined;
+                            if (hasAnswered) {
+                                const userAnswer = userAnswers[question.idx];
+                                if (userAnswer.selectedOption === optionIndex) {
+                                    optionClass = userAnswer.isCorrect ? 'user-correct' : 'user-incorrect';
+                                }
+                                if (isCorrect) {
+                                    optionClass += ' correct-answer';
+                                }
+                            } else {
+                                optionClass = 'clickable';
+                            }
+                        } else {
+                            // 普通模式下显示正确答案
+                            optionClass = isCorrect ? 'correct' : '';
+                        }
+                        
+                        const optionTranslation = translation[`options${optionIndex + 1}_CN`] || '';
+                        
+                        return `
+                            <div class="option ${optionClass}" ${examMode && !hasAnswered ? `onclick="selectAnswer(${question.idx}, ${optionIndex})"` : ''}>
+                                <div class="option-label">${String.fromCharCode(65 + optionIndex)}</div>
+                                <div class="option-content">
+                                    <div>
+                                        ${option.content}
+                                        ${!examMode ? `<button class="ai-translate-btn" onclick="translateOption(${question.idx - 1}, ${optionIndex}, '${option.content.replace(/'/g, "\\'")}')">AI翻译</button>` : ''}
+                                    </div>
+                                    ${optionTranslation ? `<div class="option-translation ${showTranslations ? 'show' : ''}">${optionTranslation}</div>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                
+                ${question.analysis && question.analysis !== '无' && (!examMode || hasAnswered) ? `
+                    <div class="analysis">
+                        <h4>答案解析 ${!examMode ? `<button class="ai-translate-btn" onclick="translateAnalysis(${question.idx - 1}, '${question.analysis.replace(/'/g, "\\'")}')">AI翻译</button>` : ''}</h4>
+                        <div class="analysis-content">${question.analysis}</div>
+                        ${translation.analysis_CN ? `<div class="analysis-translation ${showTranslations ? 'show' : ''}">${translation.analysis_CN}</div>` : ''}
+                    </div>
+                ` : ''}
+            `;
+        
+            return card;
+        }
+        
+        // 答题功能
+        function selectAnswer(questionIdx, optionIndex) {
+            if (examMode && userAnswers[questionIdx] === undefined) {
+                const question = allQuestions.find(q => q.idx === questionIdx);
+                if (question) {
+                    const isCorrect = question.answer.includes(optionIndex.toString());
+                    
+                    // 保存用户答案
+                    userAnswers[questionIdx] = {
+                        selectedOption: optionIndex,
+                        isCorrect: isCorrect,
+                        timestamp: new Date()
+                    };
+                    
+                    // 显示结果弹窗
+                    showAnswerResult(question, optionIndex, isCorrect);
+                    
+                    // 重新渲染该题目
+                    renderQuestions();
+                }
+            }
+        }
+        
+        // 显示答题结果弹窗
+        function showAnswerResult(question, selectedOption, isCorrect) {
+            const modal = document.createElement('div');
+            modal.className = 'answer-modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header ${isCorrect ? 'correct' : 'incorrect'}">
+                        <h3>${isCorrect ? '✓ 回答正确！' : '✗ 回答错误！'}</h3>
+                        <button class="close-btn" onclick="closeModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>题目：</strong>${question.title}</p>
+                        <p><strong>您的答案：</strong>${String.fromCharCode(65 + selectedOption)}. ${question.answerOptions[selectedOption].content}</p>
+                        <p><strong>正确答案：</strong>${question.answer.map(ans => String.fromCharCode(65 + parseInt(ans)) + '. ' + question.answerOptions[parseInt(ans)].content).join(', ')}</p>
+                        ${question.analysis && question.analysis !== '无' ? `
+                            <div class="analysis-section">
+                                <h4>答案解析：</h4>
+                                <p>${question.analysis}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="closeModal()" class="btn-primary">确定</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            modal.style.display = 'flex';
+        }
+        
+        // 关闭弹窗
+        function closeModal() {
+            const modal = document.querySelector('.answer-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        // 切换答题模式
+        function toggleExamMode() {
+            examMode = !examMode;
+            const toggle = document.getElementById('examModeToggle');
+            toggle.classList.toggle('active', examMode);
+            
+            if (!examMode) {
+                // 退出答题模式时清空用户答案
+                userAnswers = {};
+            }
+            
+            // 重新渲染所有题目
+            renderQuestions();
+        }
+        
+        // 修改事件监听，添加答题模式开关
+        document.getElementById('searchBox').addEventListener('input', searchQuestions);
+        document.getElementById('typeFilter').addEventListener('change', searchQuestions);
+        document.getElementById('translationToggle').addEventListener('click', toggleTranslations);
+        document.getElementById('examModeToggle').addEventListener('click', toggleExamMode);
+        /* AI翻译相关函数 */
+        async function translateTitle(questionIndex, title) {
+            const translation = await translateWithAI(title, 'title');
+            if (translation) {
+                await saveTranslation(questionIndex, 'title_CN', translation);
+                renderQuestions(); // 重新渲染以显示翻译
+            }
+        }
+        
+        async function translateOption(questionIndex, optionIndex, optionText) {
+            const translation = await translateWithAI(optionText, 'option');
+            if (translation) {
+                await saveTranslation(questionIndex, `options${optionIndex + 1}_CN`, translation);
+                renderQuestions(); // 重新渲染以显示翻译
+            }
+        }
+        
+        async function translateAnalysis(questionIndex, analysisText) {
+            const translation = await translateWithAI(analysisText, 'analysis');
+            if (translation) {
+                await saveTranslation(questionIndex, 'analysis_CN', translation);
+                renderQuestions(); // 重新渲染以显示翻译
+            }
+        }
+        
+        /* 修改loadData函数，加载本地存储的翻译 */
+        async function loadData() {
+            try {
+                // 加载题目数据
+                const response = await fetch('./getTestingAnalysis.html');
+                const text = await response.text();
+                
+                // 从HTML文件中提取JSON数据
+                const jsonMatch = text.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                    const data = JSON.parse(jsonMatch[0]);
+                    if (data.data && data.data.questionData && data.data.questionData[0] && data.data.questionData[0].questions) {
+                        allQuestions = data.data.questionData[0].questions;
+                    }
+                }
+        
+                // 加载翻译数据（优先从本地存储加载）
+                const localTranslations = localStorage.getItem('translations');
+                if (localTranslations) {
+                    translations = JSON.parse(localTranslations);
+                } else {
+                    try {
+                        const translationsResponse = await fetch('./translations.json');
+                        const translationsData = await translationsResponse.json();
+                        translations = translationsData || {};
+                    } catch (error) {
+                        console.log('翻译文件未找到，将创建新的翻译数据');
+                        translations = {};
+                    }
+                }
+        
+                filteredQuestions = [...allQuestions];
+                updateStats();
+                renderQuestions();
+            } catch (error) {
+                console.error('加载数据失败:', error);
+            }
+        }
+
+        // 获取题目类型
+        function getQuestionType(type) {
+            const types = {
+                0: '选择题'
+            };
+            return types[type] || '未知类型';
+        }
+
+        // 更新统计信息
+        function updateStats() {
+            document.getElementById('totalQuestions').textContent = `总题数: ${allQuestions.length}`;
+            document.getElementById('currentDisplay').textContent = `当前显示: ${filteredQuestions.length}`;
+        }
+
+        // 渲染题目
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            
+            filteredQuestions.forEach((question, index) => {
+                const card = createQuestionCard(question, index);
+                container.appendChild(card);
+            });
+        }
+
+        // 搜索功能
+        function searchQuestions() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
+            
+            filteredQuestions = allQuestions.filter(question => {
+                const matchesSearch = question.title.toLowerCase().includes(searchTerm) ||
+                                    question.answerOptions.some(option => 
+                                        option.content.toLowerCase().includes(searchTerm)
+                                    ) ||
+                                    (question.analysis && question.analysis.toLowerCase().includes(searchTerm));
+                
+                const matchesType = typeFilter === 'all' || question.type.toString() === typeFilter;
+                
+                return matchesSearch && matchesType;
+            });
+            
+            updateStats();
+            renderQuestions();
+        }
+
+        // 滚动到指定题目
+        function scrollToQuestion(questionNumber) {
+            const element = document.getElementById(`question-${questionNumber}`);
+            if (element) {
+                // 移除之前的高亮
+                document.querySelectorAll('.question-card.highlight').forEach(card => {
+                    card.classList.remove('highlight');
+                });
+                
+                // 添加高亮效果
+                element.classList.add('highlight');
+                
+                // 平滑滚动
+                element.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+                
+                // 3秒后移除高亮
+                setTimeout(() => {
+                    element.classList.remove('highlight');
+                }, 3000);
+            }
+        }
+
+        // 切换翻译显示
+        function toggleTranslations() {
+            showTranslations = !showTranslations;
+            const toggle = document.getElementById('translationToggle');
+            toggle.classList.toggle('active', showTranslations);
+            
+            // 更新所有翻译元素的显示状态
+            document.querySelectorAll('.translation, .option-translation, .analysis-translation').forEach(element => {
+                element.classList.toggle('show', showTranslations);
+            });
+        }
+
+        // 事件监听
+        document.getElementById('searchBox').addEventListener('input', searchQuestions);
+        document.getElementById('typeFilter').addEventListener('change', searchQuestions);
+        document.getElementById('translationToggle').addEventListener('click', toggleTranslations);
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
+
+<style>
+    /* 答题模式相关样式 */
+    .option.clickable {
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .option.clickable:hover {
+        background-color: #f0f8ff;
+    }
+    
+    .option.user-correct {
+        background-color: #d4edda;
+        border-color: #28a745;
+    }
+    
+    .option.user-incorrect {
+        background-color: #f8d7da;
+        border-color: #dc3545;
+    }
+    
+    .option.correct-answer {
+        border: 2px solid #28a745;
+    }
+    
+    .answer-status {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .answer-status.correct {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .answer-status.incorrect {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    /* 弹窗样式 */
+    .answer-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    
+    .modal-content {
+        background: white;
+        border-radius: 8px;
+        max-width: 600px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-header {
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .modal-header.correct {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .modal-header.incorrect {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .modal-header h3 {
+        margin: 0;
+    }
+    
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: inherit;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-body p {
+        margin-bottom: 15px;
+    }
+    
+    .analysis-section {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+    }
+    
+    .analysis-section h4 {
+        margin-top: 0;
+        color: #495057;
+    }
+    
+    .modal-footer {
+        padding: 20px;
+        border-top: 1px solid #eee;
+        text-align: right;
+    }
+    
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
